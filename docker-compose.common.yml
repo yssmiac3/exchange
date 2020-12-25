@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  db:
+    image: mariadb:10.3
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:? DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME:? DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD:? DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT:? DB_ROOT}
+    restart: always
+
+  app:
+    build: app
+    depends_on:
+      - db
+    restart: always
+    volumes:
+      - ./app:/var/www/app
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+
+
+  proxy:
+    image: nginx:stable-alpine
+    volumes:
+      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./app:/var/www/app
+    ports:
+      - "${APP_PORT:? APP_PORT}:80"
+    depends_on:
+      - app
+    restart: always
+
+volumes:
+  db:

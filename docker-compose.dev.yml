@@ -1,0 +1,6 @@
+version: "3.7"
+
+services:
+  app:
+    volumes:
+      - ./config/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
