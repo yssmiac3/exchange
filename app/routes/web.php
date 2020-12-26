@@ -12,11 +12,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+Route::group([
+    'middleware' => ['auth:sanctum', 'verified']
+], function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    Route::get('/exchange', [\App\Http\Controllers\ExchangeController::class, 'index'])
+        ->name('exchange');
+    Route::post('/doExchange', [\App\Http\Controllers\ExchangeController::class, 'doExchange'])
+        ->name('doExchange');
+    Route::middleware('role:admin')->get('/history', [\App\Http\Controllers\TransactionController::class, 'index'])
+        ->name('history');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
