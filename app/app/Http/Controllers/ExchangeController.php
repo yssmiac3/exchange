@@ -24,8 +24,11 @@ class ExchangeController extends Controller
     }
 
     public function doExchange(ExchangeRequest $request) {
+        if ($request->amount == 0) {
+            return redirect()->back()->with('warning', 'Can`t exchange 0');
+        }
         $max = auth()->user()->wallet->where('currency', $request->currency_from)->first()->amount;
-        if ($request->amount > $max) {
+        if ($request->amount > $max && $request->amount < 0) {
             return redirect()->back()->with('warning', 'not enough money');
         }
         $user = auth()->user();
