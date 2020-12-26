@@ -1,4 +1,9 @@
-Don`t forget to run both "php artisan migrate" and "php artisan db:seed"
+composer install
+npm install
+npm run dev
+composer dump-autoload
+php artisan migrate
+php artisan db:seed
 
 Users:
 
