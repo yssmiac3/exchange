@@ -16,7 +16,7 @@ class WalletSeeder extends Seeder
     {
         Wallet::create([
             'currency' => 'EUR',
-            'amount' => 10,
+            'amount' => 1000,
             'user_id' => 2
         ]);
         Wallet::create([

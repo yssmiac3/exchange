@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Transaction;
+use App\Http\Requests\ExchangeRequest;
 
 class ExchangeController extends Controller
 {
@@ -13,6 +13,7 @@ class ExchangeController extends Controller
         $params['currencies'] = $exchangeRates->currencies();
         $user = auth()->user();
         $data = $user->wallet;
+        $params['users_currencies'] = $user->wallet->pluck('currency');
         $records =[];
         foreach ($data as $item) {
             $records[] = $item->only(['id', 'currency', 'amount', 'updated_at']);
@@ -22,7 +23,11 @@ class ExchangeController extends Controller
         return view('exchange.index', $params);
     }
 
-    public function doExchange(Request $request) {
+    public function doExchange(ExchangeRequest $request) {
+        $max = auth()->user()->wallet->where('currency', $request->currency_from)->first()->amount;
+        if ($request->amount > $max) {
+            return redirect()->back()->with('warning', 'not enough money');
+        }
         $user = auth()->user();
         $exchangeRates = new ExchangeRate();
         $result = $exchangeRates->convert($request->amount, $request->currency_from, $request->currency_to, Carbon::now());

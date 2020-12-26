@@ -22,9 +22,7 @@ Route::group([
         ->name('exchange');
     Route::post('/doExchange', [\App\Http\Controllers\ExchangeController::class, 'doExchange'])
         ->name('doExchange');
-    Route::get('/history', [\App\Http\Controllers\TransactionController::class, 'index'])
+    Route::middleware('role:admin')->get('/history', [\App\Http\Controllers\TransactionController::class, 'index'])
         ->name('history');
-    Route::post('/transactions/get-table', [\App\Http\Controllers\TransactionController::class, 'datatable'])
-        ->name('transactions.get-table');
 });
 

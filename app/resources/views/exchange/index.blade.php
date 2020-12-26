@@ -9,6 +9,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="max-w-9xl mx-auto sm:px-6 lg:px-x">
+                    @if (\Session::has('warning'))
+                        <div class="alert alert-warning">
+                            <ul>
+                                <li>{!! \Session::get('warning') !!}</li>
+                            </ul>
+                        </div>
+                    @endif
                     <table class="table">
                         <thead>
                         <tr>
@@ -34,7 +41,7 @@
                         <div class="form-group">
                             <label for="currency_from">Enter the currency to convert from</label>
                             <select class="form-control" name="currency_from" id="currency_from">
-                                @foreach($currencies as $currency)
+                                @foreach($users_currencies as $currency)
                                     <option>{{ $currency }}</option>
                                 @endforeach
                             </select>
